@@ -1,0 +1,5 @@
+package com.imooc.po;
+
+public class MusicMessage {
+
+}

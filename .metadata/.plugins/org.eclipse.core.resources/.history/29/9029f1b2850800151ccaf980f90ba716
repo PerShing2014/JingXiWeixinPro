@@ -1,0 +1,14 @@
+package com.imooc.po;
+/**
+ * 
+ * 
+ *
+ * @author 姜子凯
+ *
+ * @version 
+ *
+ * @since 2015年6月2日
+ */
+public class News {
+	
+}

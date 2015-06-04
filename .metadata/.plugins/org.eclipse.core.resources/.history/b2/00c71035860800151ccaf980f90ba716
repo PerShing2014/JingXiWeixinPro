@@ -1,0 +1,16 @@
+package com.imooc.po;
+/**
+ * 父类，消息公用的头部信息，抽象为父类 
+ *
+ * @author 姜子凯
+ *
+ * @version 
+ *
+ * @since 2015年6月2日
+ */
+public class BaseMessage {
+	private String ToUserName;
+	private String FromUserName;
+	private long CreateTime;
+	private String MsgType;
+}

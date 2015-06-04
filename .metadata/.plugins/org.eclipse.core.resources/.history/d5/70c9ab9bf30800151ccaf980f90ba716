@@ -1,0 +1,223 @@
+package com.imooc.util;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+import com.imooc.po.Image;
+import com.imooc.po.ImageMessage;
+import com.imooc.po.News;
+import com.imooc.po.NewsMessage;
+import com.imooc.po.TextMessage;
+import com.thoughtworks.xstream.XStream;
+
+public class MessageUtil {
+	//各种消息类型....消息组装。
+	public static final String MESSAGE_NEWS = "news";
+	public static final String MESSAGE_TEXT = "text";
+	public static final String MESSAGE_IMAGE = "image";
+	public static final String MESSAGE_VOICE = "voice";
+	public static final String MESSAGE_VIDEO = "video";
+	public static final String MESSAGE_LINK = "link";
+	public static final String MESSAGE_LOCATION = "location";
+	public static final String MESSAGE_EVENT = "event";
+	public static final String MESSAGE_SUBSCRIBE = "subscribe";
+	public static final String MESSAGE_UNSUBSCRIBE = "unsubscribe";
+	public static final String MESSAGE_CLICK = "CLICK";
+	public static final String MESSAGE_VIEW = "VIEW";
+	/**
+	 * xml转为Map集合
+	 * @param request
+	 * @return
+	 * @throws IOException
+	 * @throws DocumentException
+	 */
+	public static Map<String,String> xmlToMap(HttpServletRequest request) throws IOException, DocumentException{
+		Map<String,String> map = new HashMap<String,String>();
+		SAXReader reader = new SAXReader();
+		//从request中获取输入流
+		InputStream ins = request.getInputStream();
+		Document doc = reader.read(ins);
+		//根元素
+		Element root =doc.getRootElement();
+		//根元素的子节点
+		List<Element> list = root.elements();
+		
+		for(Element e:list){
+			map.put(e.getName(), e.getText());
+		}
+		ins.close();
+		return map;
+	}
+	
+	
+	/**
+	 * 将文本消息对象转为xml
+	 * @param textMessage
+	 * @return
+	 */
+	public static String textMessageToXML(TextMessage textMessage){
+		XStream xstream = new XStream();
+		//作用：将序列化中的类全量名称，用别名替换。
+		xstream.alias("xml", textMessage.getClass());
+		return xstream.toXML(textMessage);
+	}
+	/**
+	 * 拼接文本消息
+	 */
+	public static String initText(String toUserName,String fromUserName,String content){
+		TextMessage text = new TextMessage();
+		text.setFromUserName(toUserName);//反的
+		text.setToUserName(fromUserName);//反的
+		text.setMsgType(MessageUtil.MESSAGE_TEXT);
+		text.setCreateTime(new Date().getTime());
+		text.setContent(content);
+		//组装成一个 text对象
+		//将text对象 使用工具转为xml
+		return textMessageToXML(text);
+	}
+	
+	
+	/**
+	 * 主菜单
+	 * @return
+	 */
+	public static String menuText(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("欢迎您关注景夕面试题，请按照菜单 提示进行操作：\n\n");
+		sb.append("1、公众号简单介绍\n");
+		sb.append("2、公众号详细介绍\n\n");
+		sb.append("回复？调出此帮助菜单");
+		return sb.toString();
+	}
+	/**
+	 * 回复关键字 “1”时，返回公众号的简单介绍
+	 * @return
+	 */
+	public static String firstMenu(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("java面试题的复习，和各个考点的专题介绍。面试题的收集、整合与发布。");
+		return sb.toString();
+	}
+	/**
+	 * 回复关键字 “2”时，返回公众号的详细介绍
+	 * @return
+	 */
+	public static String secondMenu(){
+		StringBuffer sb = new StringBuffer();
+		sb.append("本公众号，主要帮助你从基础开始系统的复习面试题。\n同时关于各个知识点，会有专题来进行介绍。\n"
+				+ "帮助你寻找最合适的教程使你理解。\n同时收集大家面试接触并反馈来的面试题，整理整合发送给大家参考。");
+		return sb.toString();
+	}
+	
+	/**
+	 * 
+	 * 功能描述：图文消息转为xml
+	 *
+	 * @param newsMessage
+	 * @return
+	 * 
+	 * @author 姜子凯
+	 *
+	 * @since 2015年6月2日
+	 *
+	 * @update:[变更日期YYYY-MM-DD][更改人姓名][变更描述]
+	 */
+	public static String newsMessageToXML(NewsMessage newsMessage){
+		XStream xstream = new XStream();
+		//作用：将序列化中的类全量名称，用别名替换。
+		xstream.alias("xml", newsMessage.getClass());
+		//每个消息体 ， 需要item标签包围.将消息体，转为item
+		xstream.alias("item", new News().getClass());
+		return xstream.toXML(newsMessage);
+	}
+	
+	//图片消息转为xml
+	public static String imageMessageToXML(ImageMessage imageMessage){
+		XStream xstream = new XStream();
+		//作用：将序列化中的类全量名称，用别名替换。
+		xstream.alias("xml", imageMessage.getClass());
+		return xstream.toXML(imageMessage);
+	}
+	
+	
+	
+	
+	/**
+	 * 组装一条图文信息。
+	 * 功能描述：拼接，设置一条消息体。
+	 *
+	 * @param toUserName
+	 * @param fromUserName
+	 * @return
+	 * 
+	 * @author 姜子凯
+	 *
+	 * @since 2015年6月2日
+	 *
+	 * @update:[变更日期YYYY-MM-DD][更改人姓名][变更描述]
+	 */
+	public static String initNewsMessage(String toUserName,String fromUserName){
+		String message = null;
+		List<News> newsList = new ArrayList<News>();
+		NewsMessage newsMessage = new NewsMessage();
+		//注意：多图文，就是在这里多创建几个news对象，加入到List中
+		News news = new News();
+		news.setTitle("介绍");
+		news.setDescription("gjrgjrpgkgprgpgpksg");
+		news.setPicUrl("http://examplejzk.tunnel.mobi/Weixin/image/img01.jpg");
+		news.setUrl("www.baidu.com");
+		 	
+		newsList.add(news);		
+		//设置xml外层的了
+		newsMessage.setToUserName(fromUserName);
+		newsMessage.setFromUserName(toUserName);
+		newsMessage.setCreateTime(new Date().getTime());
+		newsMessage.setMsgType(MESSAGE_NEWS);
+		newsMessage.setArticles(newsList);
+		newsMessage.setArticleCount(newsList.size());
+		
+		message = newsMessageToXML(newsMessage);
+		
+		return message;
+	}
+	
+	/**
+	 * 
+	 * 功能描述：组装图片消息
+	 *
+	 * @param toUserName
+	 * @param fromUserName
+	 * @return
+	 * 
+	 * @author 姜子凯
+	 *
+	 * @since 2015年6月2日
+	 *
+	 * @update:[变更日期YYYY-MM-DD][更改人姓名][变更描述]
+	 */
+	public static String initImageMessage(String toUserName,String fromUserName){
+		String message = null;
+		Image image = new Image();
+		image.setMediaId("9uoku-NZ3I6SQ6S1dNl_PyXkgT6rqvPZ4Es-4QqH3yu4GXlpbyNKyP8_C8K701Kw");
+		ImageMessage imageMessage = new ImageMessage();
+		imageMessage.setFromUserName(toUserName);
+		imageMessage.setToUserName(fromUserName);
+		imageMessage.setMsgType(MESSAGE_IMAGE);
+		imageMessage.setCreateTime(new Date().getTime());
+		imageMessage.setImage(image);
+		message = imageMessageToXML(imageMessage);
+		return message;
+	}
+}

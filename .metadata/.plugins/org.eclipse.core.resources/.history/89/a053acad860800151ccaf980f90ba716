@@ -1,0 +1,15 @@
+package com.imooc.po;
+/**
+ * 回复图文消息，（xml的外层）
+ *
+ * @author 姜子凯
+ *
+ * @version 
+ *
+ * @since 2015年6月2日
+ */
+public class NewsMessage extends BaseMessage{
+	private int ArticleCount;
+	//消息体，是集合类型
+	private
+}

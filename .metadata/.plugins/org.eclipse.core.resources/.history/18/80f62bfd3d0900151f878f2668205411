@@ -1,0 +1,7 @@
+package com.imooc.trans;
+
+public class Symbols {
+	private String ph_am;
+	private String ph_en;
+	private String ph_zh;//Ôö¼ÓÆ´Òô£¬
+}

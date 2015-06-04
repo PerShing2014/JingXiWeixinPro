@@ -1,0 +1,9 @@
+package com.imooc.po;
+
+public class Music {
+	private String Title;
+	private String Description;
+	private String MusicUrl;
+	private String HQMusicUrl;
+	private String ThumbMediaId;
+}

@@ -1,0 +1,31 @@
+package com.imooc.test;
+
+import java.io.IOException;
+
+import net.sf.json.JSONObject;
+
+import com.imooc.po.AccessToken;
+import com.imooc.util.WeixinUtil;
+
+public class WeixinTest {
+	public static void main(String[] args) {
+		try {
+			AccessToken token = WeixinUtil.getAccessToken();
+			System.out.println("票据："+token.getToken());
+			System.out.println("有效时间："+token.getExpiresIn());
+			
+			String path = "D:/img000.jpg";
+//			String mediaId = WeixinUtil.upload(path, token.getToken(), "image");
+			String mediaId = WeixinUtil.upload(path, token.getToken(), "thumb");
+			System.out.println(mediaId);
+			
+			//
+			String menu = JSONObject.fromObject(WeixinUtil.initMenu()).toString();
+			int result = WeixinUtil.createMenu(token.getToken(), menu);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+}

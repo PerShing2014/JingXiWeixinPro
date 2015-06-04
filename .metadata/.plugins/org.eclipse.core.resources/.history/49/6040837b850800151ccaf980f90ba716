@@ -1,0 +1,9 @@
+package com.imooc.po;
+/**
+ * 回复图文消息
+ * @author 
+ *
+ */
+public class News {
+	
+}

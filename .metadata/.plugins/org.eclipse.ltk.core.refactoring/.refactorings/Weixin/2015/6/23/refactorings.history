@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;Weixin/WebContent/resources&apos; to &apos;resource&apos;" description="Rename resource &apos;resources&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="WebContent/resources" name="resource" stamp="1433228585246" updateReferences="true"/>
+</session>
